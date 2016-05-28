@@ -1,0 +1,62 @@
+<ion-view view-title="{{card.name}}">
+    <ion-content ng-class="{expanded:$scope.isExpanded}">
+        <div class="hero slide-up" style="background-image: url('img/coffee.jpg');">
+            <div class="content">
+                <div class="avatar" style="background-image: url('img/aroma.png');">
+                </div>
+                <h3>
+                    <a class="light">
+                        ארומה הרצליה פיתוח
+                    </a>
+                </h3>
+            </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static" >
+            <a class="tab-item" ng-click="currentView = 2">
+                <i class="icon ion-ios-cart" ng-class="{'calm' : currentView==2}">
+                </i>
+                 <span ng-class="{'calm' : currentView==2}">
+                 מתנות  שלי  
+                 </span>
+            </a>
+            <a class="tab-item" ng-click="currentView = 1">
+                <i class="icon ion-ios-keypad-outline" ng-class="{'calm' : currentView==2}">
+                </i>
+                 <span ng-class="{'calm' : currentView==1}">
+                ניקובים
+                </span>
+            </a>
+        </div>
+        <div ng-show="currentView == 1">
+            <h4 class="content padding double-padding-x right-to-left">
+                ניקובים
+            </h4>
+            <div class="row animate-fade-slide-in-right" ng-repeat="couple in card.stamps">
+                <div class="col col-50">
+                    <ion-checkbox ng-disabled="true" ng-model="couple[0].isChecked">
+                        {{couple[0].index}}
+                    </ion-checkbox>
+                </div>
+                <div class="col col-50" ng-if="!$last">
+                    <ion-checkbox ng-disabled="true" ng-model="couple[1].isChecked">
+                        {{couple[1].index}}
+                    </ion-checkbox>
+                </div>
+                <div class="col col-50" ng-if="$last">
+                    <ion-checkbox ng-disabled="true" ng-model="couple[1].isChecked">
+                        {{couple[1].index}} !חינם
+                    </ion-checkbox>
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="currentView == 2">
+        <h4 class="content padding double-padding-x right-to-left">
+              מתנות  שלי
+        </h4>
+        <div>
+          <h3 class="right-to-left">אין לך כרגע מתנות</h3>
+        </div>
+        </div>
+    </ion-content>
+</ion-view>

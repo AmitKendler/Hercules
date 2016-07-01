@@ -15,10 +15,8 @@
     </ion-side-menu-content>
     <ion-side-menu side="right">
         <ion-header-bar class="dark-bg expanded">
-            <span class="avatar" style="background: url('img/adam.jpg'); background-size: cover;">
-            </span>
-            <h2>
-                הרקולס
+            <h2 class="right-to-left">
+                ברוך שובך , {{loginData().name}}
             </h2>
         </ion-header-bar>
         <ion-content class="stable-bg has-expanded-header">
@@ -26,13 +24,13 @@
                 <ion-item menu-close="" nav-clear="" ui-sref="tab.cards">
                     כרטיסיות שלי
                 </ion-item>
-                <ion-item menu-close="" nav-clear="" ui-sref="tab.places">
+          <!--       <ion-item menu-close="" nav-clear="" ui-sref="tab.places">
                     בתי קפה
-                </ion-item>
-                <ion-item menu-close="" nav-clear="" >
+                </ion-item> -->
+                <ion-item menu-close="" nav-clear="" ui-sref="tab.settings">
                     הגדרות
                 </ion-item>
-                <ion-item menu-close="" nav-clear="">
+                <ion-item menu-close="" nav-clear="" ng-click="showLogOutMenu()">
                     התנתק
                 </ion-item>
             </ion-list>

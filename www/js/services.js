@@ -1,4 +1,20 @@
-angular.module('starter.services', []).factory('scannerService', function($cordovaBarcodeScanner) {
+angular.module('starter.services', []).service('userService', function() {
+    var user;
+    // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
+    var setUser = function(user_data) {
+        user = user_data;
+       // window.localStorage.starter_facebook_user = JSON.stringify(user_data);
+    };
+    var getUser = function() {
+        return user;
+       // return JSON.parse(window.localStorage.starter_facebook_user || '{}');
+    };
+    return {
+        getUser: getUser,
+        setUser: setUser,
+
+    };
+}).factory('scannerService', function($cordovaBarcodeScanner) {
     return {
         scan: function() {
             console.log("opening scanner..");

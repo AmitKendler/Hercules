@@ -4,11 +4,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'ionic-material']).run(function($ionicPlatform, $cordovaSQLite) {
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives', 'ionic-material', 'ImgCache']).run(function($ionicPlatform, $cordovaSQLite, ImgCache) {
     $ionicPlatform.ready(function() {
-        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-        // for form inputs)
-        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+        ImgCache.$init();
+            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+            // for form inputs)
+        if(window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             cordova.plugins.Keyboard.disableScroll(true);
         }
@@ -16,8 +17,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
-        db = $cordovaSQLite.openDB("hercules.db");
-        $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, firstname text, lastname text)");
+        //  db = $cordovaSQLite.openDB("hercules.db");
+        //  $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, firstname text, lastname text)");
     });
 }).config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     // Turn off caching for demo simplicity's sake
@@ -70,7 +71,21 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
                     template: ''
                 }
             }
-        }).state('tab.login', {
+        })
+        .state('tab.settings', {
+            url: '/settings',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/settings.html',
+                    controller: 'SettingsCtrl'
+                },
+                'fabContent': {
+                    template: ''
+                }
+            }
+        })
+
+        .state('tab.login', {
             url: '/login',
             views: {
                 'menuContent': {

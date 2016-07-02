@@ -4,12 +4,21 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives', 'ionic-material', 'ImgCache']).run(function($ionicPlatform, $cordovaSQLite, ImgCache) {
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives', 'ionic-material', 'ImgCache']).constant('API_END_POINT', {
+    url: 'http://localhost:8100/api'
+}).constant('AUTH_EVENTS', {
+    notAuthenticated: 'auth-not-authenticated',
+    notAuthorized: 'auth-not-authorized'
+}).constant('USER_ROLES', {
+    admin: 'admin_role',
+    normal: 'normal_role',
+    master: 'master_role'
+}).run(function($ionicPlatform, $rootScope, authService,$state, $cordovaSQLite, ImgCache) {
     $ionicPlatform.ready(function() {
         ImgCache.$init();
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
-        if(window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             cordova.plugins.Keyboard.disableScroll(true);
         }
@@ -17,10 +26,29 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+        $rootScope.$on('$stateChangeStart', function(event, next, nextParams, fromState) {
+            if ('data' in next && 'authorizedRoles' in next.data) {
+                var authorizedRoles = next.data.authorizedRoles;
+                if (!authService.isAuthorized(authorizedRoles)) {
+                    event.preventDefault();
+                    $state.go($state.current, {}, {
+                        reload: true
+                    });
+                    $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+                }
+            }
+            if (!authService.isAuthenticated()) {
+                if (next.name !== 'tab.login') {
+                    event.preventDefault();
+                    $state.go('tab.login');
+                }
+            }
+        });
         //  db = $cordovaSQLite.openDB("hercules.db");
         //  $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, firstname text, lastname text)");
     });
-}).config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+}).config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $httpProvider) {
+    $httpProvider.interceptors.push('AuthInterceptor');
     // Turn off caching for demo simplicity's sake
     $ionicConfigProvider.views.maxCache(0);
     // Ionic uses AngularUI Router which uses the concept of states
@@ -71,8 +99,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
                     template: ''
                 }
             }
-        })
-        .state('tab.settings', {
+        }).state('tab.settings', {
             url: '/settings',
             views: {
                 'menuContent': {
@@ -83,9 +110,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
                     template: ''
                 }
             }
-        })
-
-        .state('tab.login', {
+        }).state('tab.login', {
             url: '/login',
             views: {
                 'menuContent': {
